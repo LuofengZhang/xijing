@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style>
+			.mui-content{
+				margin-top: -10px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <div class="mui-input-row mui-search">
+		        <input type="search" id="search" class="mui-input-clear" placeholder="月亮">
+		    </div>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view mui-grid-view">
+			</ul>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+		<script type="text/javascript">
+			var news=JSON.parse(localStorage.getItem("news"));
+        	if(news){
+        		document.getElementById("search").placeholder=news[0].title.substring(0,2)
+        	}
+			mui.init();
+			mui.init({
+		        keyEventBind: {
+			        backbutton: false, 
+			        menubutton: true
+			    }
+		    });
+			document.getElementById("search").addEventListener("focus",function(){
+				document.getElementById("search").blur()
+				mui.openWindow({
+				    url:"search.html",
+				    id:"search",
+				    show:{
+				      autoShow:true,
+				      aniShow:"auto",
+				      duration:0
+				    },
+				    waiting:{
+				      autoShow:false,
+				    }
+				})
+			})
+			mui.ajax('http://news-at.zhihu.com/api/4/sections',{
+				dataType:'json',//服务器返回json格式数据
+				type:'get',//HTTP请求类型
+				timeout:10000,//超时时间设置为10秒；
+				success:function(data){
+					for (var i=0;i<data.data.length;i++) {
+						if(data.data[i].thumbnail){
+							$('.mui-grid-view').append('<li class="mui-table-view-cell mui-media mui-col-xs-4" id="'+data.data[i].id+'"></li>')
+							$('.mui-col-xs-4').eq($('.mui-col-xs-4').length-1).append('<img class="mui-media-object" src="'+data.data[i].thumbnail+'">')
+							$('.mui-col-xs-4').eq($('.mui-col-xs-4').length-1).append('<div class="mui-media-body">'+data.data[i].name+'</div>')
+						}
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					mui.alert('网络错误','提示','确认',function (e) {
+					   e.index
+					},'div')
+				}
+			});
+			mui('.mui-grid-view').on('tap','.mui-table-view-cell',function(){
+				var lanmuid =this.getAttribute("id");
+				var title =this.getElementsByClassName("mui-media-body")[0].innerHTML
+				mui.openWindow({
+				    id:'lanmu',
+				    url:'lanmu.html',
+				    extras:{
+				    	lanmuid:lanmuid,
+				    	title:title
+				    }
+				  })
+			})
+		</script>
+	</body>
+</html>

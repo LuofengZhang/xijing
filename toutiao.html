@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+    <link rel="stylesheet" href="css/public.css" />
+    <style>
+   	.mui-content:first-of-type{
+   		margin-top: -10px;
+   	}
+   	.mui-pull-caption:not(.mui-pull-caption-nomore) {
+		 
+	}
+    </style>
+</head>
+<body>
+    <script>
+    	function datestring(data){
+			data.y=data.getFullYear().toString()
+		    data.m=data.getMonth()+1;
+		    if(data.m<10){
+		    	data.m="0"+data.m.toString()
+		    }else{
+		    	data.m=data.m.toString()
+		    }
+		    data.d=data.getDate();
+			if(data.d<10){
+		    	data.d="0"+data.d.toString()
+		    }else{
+		    	data.d=data.d.toString()
+		    }
+		    return data.y+data.m+data.d
+		}
+    	function month(data){
+			var data=parseInt(data.substring(4,6))
+			return data
+		}
+		function day(data){
+			var data=parseInt(data.substring(6,8))
+			return data
+		}
+    </script>
+    <script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+    <div class="mui-content">
+    	<div id="slider" class="mui-slider" >
+    	  <div class="mui-slider-group mui-slider-loop">
+    	    <!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+    	    <div class="mui-slider-item mui-slider-item-duplicate">
+    	      <a href="9668524">
+    	        <img src="https://pic2.zhimg.com//v2-22834b53546966d1a0b01458a50cd6e5.jpg">
+    	        <p class="mui-slider-title">为啥妖精老要把唐僧「蒸了吃」？</p>
+    	      </a>
+    	    </div>
+    	    <!-- 第一张 -->
+    	    <div class="mui-slider-item">
+    	      <a href="9668596">
+    	        <img src="https://pic1.zhimg.com//v2-4e319bd85e1330cf7add3eefb621c4f4.jpg">
+    	        <p class="mui-slider-title">你撒币，我作弊</p>
+    	      </a>
+    	    </div>
+    	    <!-- 第二张 -->
+    	    <div class="mui-slider-item">
+    	      <a href="9668402">
+    	        <img src="https://pic2.zhimg.com//v2-16158b375746db786c7a796d770d1fe5.jpg">
+    	        <p class="mui-slider-title">你的蛙到底在干什么？花了 5 个晚上，我总算摸清了一些规律</p>
+    	      </a>
+    	    </div>
+    	    <!-- 第三张 -->
+    	    <div class="mui-slider-item">
+    	      <a href="9668585">
+    	        <img src="https://pic2.zhimg.com//v2-a394b02ca0526f99773f5b891e218321.jpg">
+    	        <p class="mui-slider-title">中国创业教母：我基本上是不懂商业的</p>
+    	      </a>
+    	    </div>
+    	    <!-- 第四张 -->
+    	    <div class="mui-slider-item">
+    	      <a href="9668569">
+    	        <img src="https://pic2.zhimg.com//v2-39428aaa35738c64c6029b5b0c9a1abd.jpg">
+    	        <p class="mui-slider-title">腾讯带着苏宁、融创和京东 340 亿入股万达，几大巨头这是要干什么？</p>
+    	      </a>
+    	    </div>
+    	     <!-- 第五张 -->
+    	    <div class="mui-slider-item">
+    	      <a href="9668524">
+    	        <img src="https://pic2.zhimg.com//v2-22834b53546966d1a0b01458a50cd6e5.jpg">
+    	        <p class="mui-slider-title">为啥妖精老要把唐僧「蒸了吃」？</p>
+    	      </a>
+    	    </div>
+    	    <!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+    	    <div class="mui-slider-item mui-slider-item-duplicate">
+    	      <a href="9668596">
+    	        <img src="https://pic1.zhimg.com//v2-4e319bd85e1330cf7add3eefb621c4f4.jpg">
+    	        <p class="mui-slider-title">你撒币，我作弊</p>
+    	      </a>
+    	    </div>
+    	  </div>
+    	  <div class="mui-slider-indicator mui-text-right">
+    	    <div class="mui-indicator mui-active"></div>
+    	    <div class="mui-indicator"></div>
+    	    <div class="mui-indicator"></div>
+    	    <div class="mui-indicator"></div>
+    	    <div class="mui-indicator"></div>
+    	  </div>
+    	</div>
+        <!--下拉刷新容器-->
+        <div id="refreshContainer" class="mui-content mui-scroll-wrapper">
+          <div class="mui-scroll">
+            <ul class="mui-table-view mui-table-view-chevron">
+            </ul>
+          </div>
+        </div>
+    </div>
+    <script>
+    sessionStorage.setItem("zhuangtai","latest");
+    sessionStorage.setItem("zhuangtai2","0")
+    mui.init({
+	 pullRefresh : {
+	    container:'#refreshContainer',//待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+	    up : {
+	      height:50,//可选.默认50.触发上拉加载拖动距离
+	      auto:true,//可选,默认false.自动上拉加载一次
+	      contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+	      contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+	      callback : pullfresh//必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+	    }
+	 }
+	});
+	function pullfresh(){
+		var me=this
+		var id=sessionStorage.getItem("zhuangtai")
+		mui.ajax('http://news-at.zhihu.com/api/4/news/'+id,{
+			dataType:'json',//服务器返回json格式数据
+			type:'get',//HTTP请求类型
+			timeout:10000,//超时时间设置为10秒；
+			success:function(data){
+				var n=parseInt(sessionStorage.getItem("zhuangtai2"))
+				var prevDate=new Date();
+				prevDate=new Date(prevDate.getTime() - n*86400000);
+				prevDate=datestring(prevDate)
+				sessionStorage.setItem("zhuangtai","before/"+prevDate)
+				sessionStorage.setItem("zhuangtai2",n+1)
+				$(".mui-table-view-chevron").append('<div class="mui-card"></div>')
+				if(id=="latest"){
+					if (data.top_stories[4]) {
+						$("#slider p").eq(0).html(data.top_stories[4].title);
+						$("#slider img")[0].src=data.top_stories[4].image;
+						$("#slider a")[0].href=data.top_stories[4].id;
+						$("#slider p").eq(6).html(data.top_stories[0].title);
+						$("#slider img")[6].src=data.top_stories[0].image;
+						$("#slider a")[6].href=data.top_stories[0].id;
+						for (var i=0;i<5;i++) {
+							$("#slider p").eq(i+1).html(data.top_stories[i].title);
+							$("#slider img")[i+1].src=data.top_stories[i].image;
+							$("#slider a")[i+1].href=data.top_stories[i].id;
+						}
+					}
+					$(".mui-card").eq($(".mui-card").length-1).append('<div class="mui-card-header">今日头条</div>')
+				}else{
+					$(".mui-card").eq($(".mui-card").length-1).append('<div class="mui-card-header">'+month(data.date)+'月'+day(data.date)+'日</div>')
+				}
+				$(".mui-card").eq($(".mui-card").length-1).append('<ul class="mui-table-view"></ul>')
+				for(var i=0;i<data.stories.length;i++){
+					$(".mui-table-view").eq($(".mui-table-view").length-1).append('<li class="mui-table-view-cell mui-media" id="'+data.stories[i].id+'"></li>')
+					if(data.stories[i].images[0]){
+						$(".mui-table-view-cell").eq($(".mui-table-view-cell").length-1).append('<img class="mui-media-object mui-pull-right" src="'+data.stories[i].images[0]+'">')
+					}
+					$(".mui-table-view-cell").eq($(".mui-table-view-cell").length-1).append('<div class="mui-media-body"><p class="mui-ellipsis">'+data.stories[i].title+'</p></div>')
+					if(i==data.stories.length-1){
+						me.endPullupToRefresh(false);
+					}
+				}
+			},
+			error:function(xhr,type,errorThrown){
+				var n=parseInt(sessionStorage.getItem("zhuangtai2"))
+				var prevDate=new Date();
+				prevDate=new Date(prevDate.getTime() - n*86400000);
+				prevDate=datestring(prevDate)
+				sessionStorage.setItem("zhuangtai","before/"+prevDate)
+				sessionStorage.setItem("zhuangtai2",n+1)
+				me.endPullupToRefresh(false);
+				mui.alert('网络错误','提示','明白',function (e) {
+				   e.index
+				},'div')
+			}
+		});
+	}
+	mui("#slider").on("tap","a",function(event){
+		event.preventDefault();
+	  //获取id
+	  var news = this.getAttribute("href");
+	  //打开新闻详情
+	  mui.openWindow({
+	    id:'about.html',
+	    url:'about.html',
+	    show:{
+	    	aniShow:"zoom-fade-out",
+	    	duration:500
+	    },
+	    extras:{
+	    	news:news//传nwes id值给详情页面，通知加载新数据
+	    },
+	    waiting:{autoShow:false},
+	     styles:{
+	      top:"0px",//新页面顶部位置
+	      bottom:"0px"//新页面底部位置
+	    }
+	  })
+	});
+	mui("#refreshContainer").on("tap",".mui-media",function(){
+	  //获取id
+	  var news = this.getAttribute("id");
+	  //打开新闻详情
+	  mui.openWindow({
+	    id:'about',
+	    url:'about.html',
+	    show:{
+	    	aniShow:"zoom-fade-out",
+	    	duration:500
+	    },
+	    extras:{
+	    	news:news//传nwes id值给详情页面，通知加载新数据
+	    },
+	    waiting:{autoShow:false},
+	     styles:{
+	      top:"0px",//新页面顶部位置
+	      bottom:"0px"//新页面底部位置
+	    }
+	  })
+	});
+	mui('#slider').slider({
+	  	interval:5000//自动轮播周期，若为0则不自动播放，默认为0；
+	});
+	document.getElementById("slider").addEventListener("touchmove",function(evt){
+		var e=event||evt
+		e.preventDefault();
+	})
+    </script>
+</body>
+</html>

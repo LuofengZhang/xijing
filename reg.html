@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>reg</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+    <link rel="stylesheet" href="css/public2.css" />
+    <style>
+    	.mui-input-group {
+			margin-top: 10px;
+		}
+		.mui-content{
+			margin-top: -20px;
+		}
+		.mui-input-group:first-child {
+			margin-top: 20px;
+		}
+		
+		.mui-input-group label {
+			width: 22%;
+		}
+		.mui-input-row label~input,
+		.mui-input-row label~select,
+		.mui-input-row label~textarea {
+			width: 78%;
+		}
+		.mui-checkbox input[type=checkbox],
+		.mui-radio input[type=radio] {
+			top: 6px;
+		}
+		.mui-content-padded {
+			margin-top: 25px;
+		}
+		.mui-btn {
+			padding: 10px;
+		}
+		.link-area {
+			display: block;
+			margin-top: 25px;
+			text-align: center;
+		}
+		.spliter {
+			color: #bbb;
+			padding: 0px 8px;
+		}
+		.oauth-area {
+			position: absolute;
+			bottom: 20px;
+			left: 0px;
+			text-align: center;
+			width: 100%;
+			padding: 0px;
+			margin: 0px;
+		}
+		.btn-active{
+    		background: #FA4B9B !important;
+    	}
+    	.mui-btn-block{
+			background: rgba(250,75,155,0.6);
+			color: white;
+		}
+    	#yanzhen{
+    		padding: 0 3px;
+    	}
+    	#yanzhen input{
+    		width: 50%;
+    	}
+    	#yanzhen button{
+    		margin-top: 4px;
+    		float: right;
+    		background: rgba(250,75,155,0.6);
+    		color: white;
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title">注册</h1>
+	</header>
+	<br />
+	<div class="mui-content">
+		<form id='login-form' class="mui-input-group">
+			<div class="mui-input-row">
+				<label>账号</label>
+				<input id='account' type="tel" class="mui-input-clear mui-input" placeholder="请输入手机号">
+			</div>
+			<div class="mui-input-row">
+				<label>密码</label>
+				<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
+			</div>
+		</form>
+		<form class="mui-input-group">
+			<div class="mui-input-row" id="yanzhen">
+			    <input type="text" placeholder="请输入验证码">
+			    <button type="button" class="btn">发送验证码</button>
+			</div>
+		</form>
+        <div class="mui-content-padded">
+			<button id='reg' class="mui-btn mui-btn-block">注册账号</button>
+			<div class="link-area"><a id='login'>登录</a> <span class="spliter">|</span> <a id='forgetPassword'>忘记密码</a>
+			</div>
+		</div>
+	</div>
+    <script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+    <script type="text/javascript">
+    mui.init()
+    var yanzhengma=Math.random();
+    var lock=true;
+    var lock2=true;
+    var shoujizhuangtai;
+    var mimazhuangtai;
+    $("input").on("input",function(){
+    	var regshouji=/^[1-3]\d{10}$/;
+    	var regmima=/^[a-z0-9_-]{6,18}$/;
+    	if($("input").eq(0).val().length>=12){
+    		$("input").eq(0).val($("input").eq(0).val().substring(0,11))
+    	}
+    	if($("input").eq(2).val().length>=7){
+    		$("input").eq(2).val($("input").eq(2).val().substring(0,6))
+    	}
+    	shoujizhuangtai=regshouji.test($("input").eq(0).val())
+    	mimazhuangtai=regmima.test($("input").eq(1).val())
+    	if (shoujizhuangtai&&lock) {
+    		$('#yanzhen button').addClass('btn-active')
+    	} else{
+    		$('#yanzhen button').removeClass('btn-active')
+    	}
+    	if (shoujizhuangtai&&mimazhuangtai) {
+    		$(".mui-btn-block").addClass('btn-active')
+    	} else{
+    		$(".mui-btn-block").removeClass('btn-active')
+    	}
+    })
+    mui.plusReady(function () {
+        $("#reg").click(function(){
+			if (shoujizhuangtai&&mimazhuangtai&&$("input").eq(2).val()==yanzhengma&&lock2) {
+				lock2=false;
+				$.ajax({
+					type:"post",
+					url:"http://zhchina.top:8040/users/adduser",
+					async:true,
+					data:{"uid":$("input").eq(0).val(),"password":$("input").eq(1).val()},
+					success:function(data){
+						if (data.code==200) {
+							localStorage.setItem("login",JSON.stringify({"uid":$("input").eq(0).val(),"name":$("input").eq(0).val(),"img":"http://zhchina.top:8040/icon/1518079477182.png","email":null}))
+							mui.toast('注册成功！已自动登录')
+							setTimeout(function() {
+								plus.runtime.restart();
+							},2000)
+						} else{
+							mui.alert(data.log,'提示','确认',function (e) {
+							   e.index
+							},'div')
+						}
+					},
+					error:function(){
+						lock2=true;
+						mui.alert('请重试','提示','确认',function (e) {
+						   e.index
+						},'div')
+					}
+				});
+			} else{
+				if(!shoujizhuangtai){
+					mui.alert('你的手机号格式不对！','提示','确认',function (e) {
+					   e.index
+					},'div')
+				}
+				if (!mimazhuangtai) {
+					mui.alert('密码只能使用数字字母下划线, 长度在6-18位','提示','确认',function (e) {
+					   e.index
+					},'div')
+				}
+				if(parseInt($("input").eq(2).val())!=yanzhengma){
+					mui.alert('验证码错误','提示','确认',function (e) {
+					   e.index
+					},'div')
+				}
+			}
+		})
+    })
+	    
+    $('#yanzhen button').click(function(){
+    	var me=$(this)
+    	me.removeClass("btn-active")
+    	if(shoujizhuangtai&&lock){
+    		mui.ajax('http://zhchina.top:8040/msg',{
+    			data:{
+    				"userphone":$("input").val()
+    			},
+    			dataType:'json',//服务器返回json格式数据
+    			type:'post',//HTTP请求类型
+    			timeout:10000,//超时时间设置为10秒；
+    			success:function(data){
+    				yanzhengma=data.yanzhengma
+		    		var time=60;
+		    		var yanzhentimer=setInterval(function(){
+		    			time--
+		    			me.html(time+"秒后可重发")
+		    			if(time==0){
+		    				clearInterval(yanzhentimer)
+		    				lock=true;
+		    				me.addClass("btn-active");
+		    				me.html("发送验证码")
+		    			}
+		    		},1000)
+    			},
+    			error:function(xhr,type,errorThrown){
+    				lock=true;
+    				me.addClass("btn-active");
+    				mui.alert('发送失败','提示','确认',function (e) {
+					   e.index
+					},'div')
+    			}
+    		});
+    	}
+    	lock=false;
+    })
+    document.getElementById("login").addEventListener("tap",function(){
+		mui.openWindow('login.html','login',{waiting:{autoShow:false}})
+	})
+	document.getElementById("forgetPassword").addEventListener("tap",function(){
+		mui.openWindow('forget_password.html','forget_password',{waiting:{autoShow:false}})
+	})
+    </script>
+</body>
+</html>

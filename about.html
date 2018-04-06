@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+    <link rel="stylesheet" href="css/about.css" />
+</head>
+<body>
+    <script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+    <script type="text/javascript">
+    mui.init()
+    </script>
+    <header class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">news</h1>
+    </header>
+    <div class="mui-scroll-wrapper">
+        <div class="mui-scroll">
+            <!--这里放置真实显示的DOM内容-->
+            <div class="mui-content">
+    		</div>
+        </div>
+    </div>
+   <button type="button" class="mui-btn mui-btn-primary">查看评论<span class="mui-badge mui-badge-primary mui-badge-inverted">12</span></button>
+    <script>
+    	var num=0;
+    	var longComments=[]
+    	var shortComments=[]
+    	mui.plusReady(function(){
+    		var self = plus.webview.currentWebview();
+            var id = self.news;
+            mui.ajax('http://news-at.zhihu.com/api/4/news/'+id,{
+	    		dataType:'json',//服务器返回json格式数据
+	    		type:'get',//HTTP请求类型
+	    		timeout:10000,//超时时间设置为10秒；
+	    		success:function(data){
+	    			$('.mui-content')[0].innerHTML=data.body;
+	    			if($(".img-place-holder")[0]){
+	    				$(".img-place-holder").css("background-image","url("+data.image+")");
+	    				$(".img-place-holder").append('<p>'+data.image_source+'</p>');
+	    			}
+	    		},
+	    		error:function(xhr,type,errorThrown){
+	    			mui.alert('网络错误','提示','明白',function (e) {
+	    			   e.index
+	    			},'div')
+	    		}
+	    	});
+	    	mui(".mui-scroll-wrapper").scroll({
+	    		 scrollY: true, //是否竖向滚动
+				 scrollX: false, //是否横向滚动
+				 startX: 0, //初始化时滚动至x
+				 startY: 0, //初始化时滚动至y
+				 indicators: true, //是否显示滚动条
+				 deceleration:0.0005, //阻尼系数,系数越小滑动越灵敏
+				 bounce: true //是否启用回弹
+	    	})
+	    	mui(".mui-content").on("tap","a",function(event){
+				event.preventDefault();
+				var href=this.getAttribute("href");
+				mui.openWindow({
+					url:href,
+				    id:"wailian",
+				    styles:{
+				      top:"45px",//新页面顶部位置
+				    },
+				    show:{
+				      aniShow:"slide-in-right",//页面显示动画
+				      duration:200//页面动画持续时间
+				    }
+				})
+			})
+	    	mui.getJSON('http://news-at.zhihu.com/api/4/story/'+id+'/long-comments',function(data){
+					num=data.comments.length+num;
+					document.querySelector(".mui-badge-inverted").innerHTML=num;
+					longComments=data.comments;
+				}
+			);
+	    	mui.getJSON('http://news-at.zhihu.com/api/4/story/'+id+'/short-comments',function(data){
+					num=data.comments.length+num;
+					document.querySelector(".mui-badge-inverted").innerHTML=num;
+					shortComments=data.comments
+				}
+			);
+	    })
+    	document.querySelector(".mui-btn").addEventListener("tap",function(){
+			mui.openWindow({
+					url:"pinglun.html",
+				    id:"pinglun",
+				    styles:{
+				      top:"0px",
+				    },
+				    show:{
+				      aniShow:"zoom-fade-out",//页面显示动画
+				      duration:200//页面动画持续时间
+				    },
+				     extras:{
+				    	shortComments:shortComments,
+				    	longComments:longComments
+				    }
+			})
+    	})
+    </script>
+</body>
+</html>

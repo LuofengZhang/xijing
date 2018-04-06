@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/public.css" />
+		<link rel="stylesheet" href="css/iconfont.css" />
+	</head>
+	<body>
+		<nav class="mui-bar mui-bar-tab">
+		    <a class="mui-tab-item mui-active" href="index.html" data-id="index">
+		        <i class="mui-icon iconfont icon-iconsy1"></i>
+		        <span class="mui-tab-label" >首页</span>
+		    </a>
+		    <a class="mui-tab-item" data-id="fenlei" href="fenlei.html">
+		        <i class="mui-icon iconfont icon-drxx11"></i>
+		        <span class="mui-tab-label">专栏</span>
+		    </a>
+		    <a class="mui-tab-item" data-id="liaotian" href="liaotian.html">
+		        <i class="mui-icon iconfont icon-liaotian"></i>
+		        <span class="mui-tab-label">服务</span>
+		    </a>
+		    <a class="mui-tab-item" data-id="setting" href="setting.html">
+		        <i class="mui-icon iconfont icon-settings__eas"></i>
+		        <span class="mui-tab-label">设置</span>
+		    </a>
+		</nav>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/webviewGroup.js" ></script>
+		<script type="text/javascript">
+			if (localStorage.getItem('login')) {
+				var login=JSON.parse(localStorage.getItem('login'))
+			}
+			if(login){
+				mui.ajax('http://zhchina.top:8040/users',{
+					data:{
+						uid:login.uid
+					},
+					dataType:'json',//服务器返回json格式数据
+					type:'post',//HTTP请求类型
+					timeout:10000,//超时时间设置为10秒；
+					success:function(data){
+						var data=data[0]
+						localStorage.setItem("login",JSON.stringify({"uid":data.uid,"name":data.name,"img":data.img,"email":data.email}))
+					}
+				});
+			}
+			mui.ajax('http://zhchina.top:8040/search/news',{
+				dataType:'json',//服务器返回json格式数据
+				type:'get',//HTTP请求类型
+				timeout:10000,//超时时间设置为10秒；
+				success:function(data){
+					localStorage.setItem('news',JSON.stringify(data));
+				}
+			});
+			mui.init();
+			mui.plusReady(function() {
+                var self = plus.webview.currentWebview();
+                var current = '';
+                var styles = {
+                    top: '0',
+                    bottom: '51px'
+                };
+                var tabsConfig = {
+                    index: {
+                        url: 'index.html',
+                        styles: styles,
+                        default: true
+                    },
+                    fenlei: {
+                        url: 'fenlei.html',
+                        styles: styles
+                    },
+                    liaotian: {
+                        url: 'liaotian.html',
+                        styles: styles
+                    },
+                    setting: {
+                        url: 'setting.html',
+                        styles: styles
+                    }
+                };
+                var tabs = {};
+                for (id in tabsConfig) {
+                    tabs[id] = plus.webview.create(tabsConfig[id].url, id, tabsConfig[id].styles);
+                    if (tabsConfig[id]['default']) {
+                        self.append(tabs[id]);
+                        current = id;
+                    }
+                }
+                mui('.mui-bar').on('tap','.mui-tab-item', function() {
+                    if (current == this.dataset.id) {
+                        mui.fire(tabs[current], 'scrolltop');
+                        return;
+                    }
+                    tabs[this.dataset.id].show();
+                    tabs[current].hide();
+                    current = this.dataset.id;
+                });
+          });
+		</script>
+	</body>
+</html>

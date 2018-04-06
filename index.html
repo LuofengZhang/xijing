@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>index</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <link rel="stylesheet" href="css/mui.min.css">
+    </head>
+	<style>
+		.mui-scroll-wrapper{
+			background: white !important;
+			height: 42px !important;
+		}
+		.mui-content .mui-active{
+			color: #fa4b9b !important;
+			font-weight: bold;
+			border-bottom-color: #fa4b9b !important;
+		}
+	</style>
+    <body>
+    	<header class="mui-bar mui-bar-nav">
+		    <div class="mui-input-row mui-search">
+		        <input type="search" id="search" class="mui-input-clear" placeholder="">
+		    </div>
+		</header>
+    	<div class="mui-content">
+    	    <div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+    	        <div class="mui-scroll">
+    	            <a class="mui-control-item mui-active" data-wid="toutiao">头条</a>
+    	            <a class="mui-control-item" data-wid="tuijian">推荐</a>
+    	            <a class="mui-control-item" data-wid="game">游戏</a>
+    	            <a class="mui-control-item" data-wid="moive">电影</a>
+    	            <a class="mui-control-item" data-wid="sheji">设计</a>
+    	            <a class="mui-control-item" data-wid="gongsi">公司</a>
+    	            <a class="mui-control-item" data-wid="caijing">财经</a>
+    	            <a class="mui-control-item" data-wid="music">音乐</a>
+    	            <a class="mui-control-item" data-wid="tiyu">体育</a>
+    	            <a class="mui-control-item" data-wid="dongman">动漫</a>
+    	            <a class="mui-control-item" data-wid="hulianwang">互联网</a>
+    	            <a class="mui-control-item" data-wid="wuliao">无聊</a>
+    	        </div>
+    	    </div>
+    	</div>
+        <script src="js/mui.min.js"></script>
+        <script src="js/webviewGroup.js" type="text/javascript" charset="utf-8"></script>
+        <script>
+        	var news=JSON.parse(localStorage.getItem("news"));
+        	if(news){
+        		document.getElementById("search").placeholder=news[0].title.substring(0,2)
+        	}
+            mui.init();
+            mui.plusReady(function() {
+                var group = new webviewGroup("index", {
+                    items: [
+                    	{
+	                        id: "toutiao",   //这是子页1的路径
+	                        url: "toutiao.html",
+	                        styles:{top:"90px"},
+	                        waiting:{autoShow:false},
+	                        extras: {}
+	                    }, 
+	                    {
+	                        id: "tuijian",    //这是子页2的路径
+	                        url: "tuijian.html",
+	                        styles:{top:"90px"},
+	                        waiting:{autoShow:false},
+	                        extras: {}
+	                    },
+	                    {
+	                        id: "game",    //这是子页3的路径
+	                        url: "game.html",
+	                        styles:{top:"90px"},
+	                        waiting:{autoShow:false},
+	                        extras: {}
+	                    },
+	                    {
+	                        id: "moive",    //这是子页4的路径
+	                        url: "moive.html",
+	                        styles:{top:"90px"},
+	                        waiting:{autoShow:false},
+	                        extras: {}
+	                    },
+	                    {
+	                        id: "sheji",    //这是子页5的路径
+	                        url: "sheji.html",
+	                        styles:{top:"90px"},
+	                        waiting:{autoShow:false},
+	                        extras: {}
+	                    },
+	                    {
+	                        id: "gongsi",    //这是子页6的路径
+	                        url: "gongsi.html",
+	                        styles:{top:"90px"},
+	                        waiting:{autoShow:false},
+	                        extras: {}
+	                    },
+	                    {
+	                        id: "caijing",    //这是子页7的路径
+	                        url: "caijing.html",
+	                        styles:{top:"90px"},
+	                        waiting:{autoShow:false},
+	                        extras: {}
+	                    },
+	                    {
+	                        id: "music",    //这是子页8的路径
+	                        url: "music.html",
+	                        styles:{top:"90px"},
+	                        waiting:{autoShow:false},
+	                        extras: {}
+	                    },
+	                    {
+	                        id: "tiyu",    //这是子页9的路径
+	                        url: "tiyu.html",
+	                        styles:{top:"90px"},
+	                        waiting:{autoShow:false},
+	                        extras: {}
+	                    },
+	                    {
+	                        id: "dongman",    //这是子页10的路径
+	                        url: "dongman.html",
+	                        styles:{top:"90px"},
+	                        waiting:{autoShow:false},
+	                        extras: {}
+	                    },
+	                    {
+	                        id: "hulianwang",    //这是子页11的路径
+	                        url: "hulianwang.html",
+	                        styles:{top:"90px"},
+	                        waiting:{autoShow:false},
+	                        extras: {}
+	                    },
+	                    {
+	                        id: "wuliao",    //这是子页12的路径
+	                        url: "wuliao.html",
+	                        styles:{top:"90px"},
+	                        waiting:{autoShow:false},
+	                        extras: {}
+	                    }
+	                ],
+                    onChange:function(obj){
+                    	var c = document.querySelector(".mui-control-item.mui-active");
+                        if(c) {
+                            c.classList.remove("mui-active");
+                        }
+                        document.querySelector(".mui-scroll .mui-control-item:nth-child(" + (parseInt(obj.index) + 1) + ")").classList.add("mui-active");
+                        var active= document.querySelectorAll(".mui-active")[document.querySelectorAll(".mui-active").length-1]
+                        mui('.mui-scroll-wrapper').scroll().scrollTo(-active.offsetLeft+150,0,100);
+                    }
+                });
+                mui(".mui-scroll").on("tap", ".mui-control-item", function() {
+                    var wid = this.getAttribute("data-wid");
+                    group.switchTab(wid);
+                });
+            });
+            document.getElementById("search").addEventListener("focus",function(){
+				document.getElementById("search").blur()
+				mui.openWindow({
+				    url:"search.html",
+				    id:"search",
+				    show:{
+				      autoShow:true,
+				      aniShow:"auto",
+				      duration:0
+				    },
+				    waiting:{
+				      autoShow:false,
+				    }
+				})
+			})
+            mui('.mui-scroll-wrapper').scroll({
+				 bounce: true
+			});
+        </script>
+    </body>
+</html>

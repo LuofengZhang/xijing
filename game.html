@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/public.css" />
+		<style>
+			.mui-content{
+			margin-top: -10px;
+		}
+		</style>
+	</head>
+	<body>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+	    <!--下拉刷新容器-->
+	    <div id="refreshContainer" class="mui-content mui-scroll-wrapper">
+	      	<div class="mui-scroll">
+	        	<!--数据列表-->
+	        	<ul class="mui-table-view mui-table-view-chevron">
+	          		
+	        	</ul>
+	    	</div>
+	    </div>
+		<script type="text/javascript">
+			sessionStorage.setItem("game","")
+			mui.init({
+				pullRefresh : {
+				    container:"#refreshContainer",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+				    up:{
+				      auto: true,
+				      callback :pullfresh
+				    }
+				  }
+			});
+        	function pullfresh(){
+        		var me=this
+        		var id=sessionStorage.getItem("game")
+        		mui.ajax('http://news-at.zhihu.com/api/4/theme/2'+id,{
+					dataType:'json',//服务器返回json格式数据
+					type:'get',//HTTP请求类型
+					timeout:10000,//超时时间设置为10秒；
+					success:function(data){
+						sessionStorage.setItem("game","/before/"+data.stories[data.stories.length-1].id)
+						$(".mui-table-view-chevron").append('<div class="mui-card"></div>')
+						$(".mui-card").eq($(".mui-card").length-1).append('<ul class="mui-table-view"></ul>')
+						for(var i=0;i<data.stories.length;i++){
+							$(".mui-table-view").eq($(".mui-table-view").length-1).append('<li class="mui-table-view-cell mui-media" id="'+data.stories[i].id+'"></li>')
+							if(data.stories[i].images){
+								$(".mui-table-view-cell").eq($(".mui-table-view-cell").length-1).append('<img class="mui-media-object mui-pull-right" src="'+data.stories[i].images[0]+'">')						
+							}
+							$(".mui-table-view-cell").eq($(".mui-table-view-cell").length-1).append('<div class="mui-media-body"><p class="mui-ellipsis">'+data.stories[i].title+'</p></div>')
+						}
+						me.endPullupToRefresh(false);
+					},
+					error:function(xhr,type,errorThrown){
+						me.endPullupToRefresh(false);
+						mui.alert('网络错误','提示','明白',function (e) {
+						   e.index
+						},'div')
+					}
+				});
+        	} 
+	    mui(".mui-content").on("tap",".mui-media",function(){
+		  var news = this.getAttribute("id");
+		  mui.openWindow({
+		    id:'about',
+		    url:'about.html',
+		    extras:{
+		    	news:news
+		    },
+		    show:{
+		    	aniShow:"zoom-fade-out",
+	    		duration:500
+		    }
+		  })
+		});
+		</script>
+	</body>
+</html>

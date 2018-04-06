@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/public2.css" />
+	</head>
+	<style>
+		.touxiang{
+			line-height: 40px;
+		}
+		.mui-table-view-chevron{
+			margin: 20px 0px;
+		}
+		#photo{
+			width: 100%;
+			background: wheat;
+			height: 60px;
+			position: absolute;
+			top: 60px;
+			opacity: 0;
+		}
+	</style>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+				<span class="mui-icon mui-icon-left-nav"></span>设置
+			</button>
+			<h1 class="mui-center mui-title">个人资料</h1>
+		</header>
+		<div class="mui-content">
+		    <ul class="mui-table-view mui-table-view-chevron">
+				<li class="mui-table-view-cell mui-media" id="head">
+					<a class="mui-navigate-right touxiang">
+						<img class="mui-media-object mui-pull-right" id="head-img1" src="http://zhchina.top:8040/icon/1518081064886.png">
+						<div class="mui-media-body">头像</div>
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a>账号<span class="mui-pull-right" id="name">1354410963</span></a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a>手机号<span class="mui-pull-right" id="uid">17607095343</span></a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a>邮箱地址<span class="mui-pull-right" id="email">luofengzh@163.com</span></a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a>生日<span class="mui-pull-right">2018-1-30</span></a>
+				</li>
+			</ul>
+			<ul class="mui-table-view mui-table-view-chevron">
+		        <li class="mui-table-view-cell" id="password">
+		            <a class="mui-navigate-right">修改密码</a>
+		        </li>
+		        <li class="mui-table-view-cell">
+		            <a class="mui-navigate-right">绑定QQ</a>
+		        </li>
+		       	<li class="mui-table-view-cell">
+		            <a class="mui-navigate-right">绑定微博</a>
+		        </li>
+		        <li class="mui-table-view-cell">
+		            <a class="mui-navigate-right">绑定微信</a>
+		        </li>
+			</ul>
+			<input type="file" id="photo">
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			var login=JSON.parse(localStorage.getItem("login"))
+			if(login){
+				document.getElementById("name").innerHTML=login.name;
+				document.getElementById("uid").innerHTML=login.uid;
+				if (login.img) {
+					document.getElementById("head-img1").src=login.img;
+				}
+				if(login.email){
+					document.getElementById("email").innerHTML=login.email;
+				}
+			}
+			document.getElementById("photo").addEventListener("change", function(e) {
+				var files = this.files;
+				var reader = new FileReader();
+				reader.readAsDataURL(files[0]);
+				reader.onload = function(e) {
+					var dx = (e.total / 1024) / 1024;
+					if(dx >= 2) {
+						mui.toast('图片太大了')
+						return;
+					}
+					document.getElementById("head-img1").src=this.result;
+					login.img=this.result;
+					localStorage.setItem("login",JSON.stringify(login))
+					mui.ajax('http://zhchina.top:8040/img',{
+						data:{
+							uid:login.uid,
+							img:document.getElementById("head-img1").src
+						},
+						dataType:'json',//服务器返回json格式数据
+						type:'post',//HTTP请求类型
+						timeout:10000,//超时时间设置为10秒；
+						success:function(data){
+							mui.toast('成功')
+							console.log(data.img)
+						},
+						error:function(xhr,type,errorThrown){
+							mui.toast('网络错误')
+						}
+					});
+				}
+			})
+			document.getElementById("password").addEventListener("tap",function(){
+				mui.openWindow('updata.html','updata',{ extras:{upwhat:"password",uid:login.uid},waiting:{autoShow:false}})
+			})
+			document.getElementById("name").addEventListener("tap",function(){
+				mui.openWindow('updata.html','updata',{ extras:{upwhat:"name",uid:login.uid},waiting:{autoShow:false}})
+			})
+			document.getElementById("email").addEventListener("tap",function(){
+				mui.openWindow('updata.html','updata',{ extras:{upwhat:"email",uid:login.uid},waiting:{autoShow:false}})
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/public2.css" />
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">个人详情</h1>
+		</header>
+		<div class="mui-content">
+		    <ul class="mui-table-view">
+	            <li class="mui-table-view-cell">
+	                <a class="mui-navigate-right" id="clear">清除聊天记录</a>
+	            </li>
+	        </ul>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			mui.plusReady(function () {
+			    document.getElementById("clear").addEventListener("tap",function(){
+					localStorage.removeItem("liaotian");
+					var chat = plus.webview.getWebviewById('chat');
+					chat.reload(true);
+					mui.back();
+				})
+			})
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/public2.css" />
+		<style>
+			.mui-input-group:first-child {
+				margin-top: 20px;
+			}
+			.mui-input-group label {
+				width: 22%;
+			}
+			.mui-input-row label~input{
+				width: 78%;
+			}
+			.mui-content-padded {
+				margin-top: 25px;
+			}
+	    	.mui-btn-block{
+				background: #FA4B9B !important;
+				color: white;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon muwvsi-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title"></h1>
+		</header>
+		<div class="mui-content">
+		    <form class="mui-input-group">
+				<div class="mui-input-row">
+					<label class="label"></label>
+					<input id='input' type="text" class="mui-input-clear mui-input" placeholder="请输入手机号">
+				</div>
+			</form>
+			<div class="mui-content-padded">
+				<button id='tijiao' class="mui-btn mui-btn-block">提交</button>
+			</div>
+		</div>
+		
+		<script src="js/mui.min.js"></script>
+			<script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+		<script type="text/javascript">
+			mui.init()
+			mui.plusReady(function (){
+			    var self = plus.webview.currentWebview();
+			    var title=self.upwhat;
+			    var uid=self.uid;
+			    if (title=='password') {
+			    	titles="密码"
+			    }
+			    if(title=="email"){
+			    	titles="邮箱"
+			    }
+			    if(title=="name"){
+			    	titles="昵称"
+			    }
+			    $('.mui-title').html("修改"+titles);
+			    $('.label').html(titles);
+			    $('#input')[0].placeholder="请输入新"+titles
+			    document.getElementById("tijiao").addEventListener("tap",function(){
+					mui.ajax('http://zhchina.top:8040/users/updata'+title,{
+						data:{
+							[title]:$("#input").val(),
+							uid:uid
+						},
+						dataType:'json',//服务器返回json格式数据
+						type:'post',//HTTP请求类型
+						timeout:10000,//超时时间设置为10秒；
+						success:function(data){
+							if(data.code==200){
+								mui.toast(titles+'修改成功');
+								setTimeout(function() {
+									plus.runtime.restart();
+								},2000)
+							}
+						},
+						error:function(xhr,type,errorThrown){
+							mui.toast('修改失败')
+						}
+					});
+				})
+			})
+		</script>
+	</body>
+
+</html>

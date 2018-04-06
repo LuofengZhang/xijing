@@ -1,0 +1,156 @@
+{
+	"index.html": {
+		"refer": [
+			"4a.html",
+			"toutiao.html",
+			"tuijian.html",
+			"game.html",
+			"moive.html",
+			"gongsi.html",
+			"sheji.html",
+			"music.html",
+			"tiyu.html",
+			"caijing.html",
+			"dongman.html",
+			"hulianwang.html",
+			"wuliao.html",
+			"search.html"
+		],
+		"resources": [
+			"toutiao.html",
+			"tuijian.html"
+		]
+	},
+	"main.html": {
+		"resources": [
+			"index.html"
+		],
+		"refer": [
+			"index.html",
+			"search.html",
+			"liaotian.html",
+			"setting.html",
+			"fenlei.html"
+		]
+	},
+	"toutiao.html": {
+		"refer": [
+			"about.html"
+		]
+	},
+	"tuijian.html": {
+		"refer": [
+			"about.html"
+		]
+	},
+	"game.html": {
+		"refer": [
+			"about.html"
+		]
+	},
+	"gongsi.html": {
+		"refer": [
+			"about.html"
+		]
+	},
+	"moive.html": {
+		"refer": [
+			"about.html"
+		]
+	},
+	"sheji.html": {
+		"refer": [
+			"about.html"
+		]
+	},
+	"fenlei.html": {
+		"refer": [
+			"search.html",
+			"lanmu.html"
+		]
+	},
+	"wuliao.html": {
+		"refer": [
+			"about.html"
+		]
+	},
+	"setting.html": {
+		"refer": [
+			"guide.html",
+			"zhanghao.html",
+			"reg.html",
+			"login.html",
+			"yingsi.html",
+			"tongyong.html",
+			"xinxiaoxi.html",
+			"guanyu.html"
+		]
+	},
+	"lanmu.html": {
+		"refer": [
+			"about.html"
+		]
+	},
+	"about.html": {
+		"refer": [
+			"pinglun.html"
+		]
+	},
+	"dongman.html": {
+		"refer": [
+			"about.html"
+		]
+	},
+	"caijing.html": {
+		"refer": [
+			"about.html"
+		]
+	},
+	"login.html": {
+		"refer": [
+			"reg.html",
+			"forget_password.html"
+		]
+	},
+	"liaotian.html": {
+		"refer": [
+			"chat.html"
+		]
+	},
+	"chat.html": {
+		"refer": [
+			"qingchuliaotian.html"
+		]
+	},
+	"qingchuliaotian.html": {
+		"refer": [
+			"chat.html"
+		]
+	},
+	"guanyu.html": {
+		"refer": [
+			"guide.html"
+		]
+	},
+	"reg.html": {
+		"refer": [
+			"main.html",
+			"forget_password.html"
+		]
+	},
+	"search.html": {
+		"refer": [
+			"about.html"
+		]
+	},
+	"forget_password.html": {
+		"refer": [
+			"updata.html"
+		]
+	},
+	"zhanghao.html": {
+		"refer": [
+			"updata.html"
+		]
+	}
+}

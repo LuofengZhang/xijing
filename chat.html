@@ -1,0 +1,289 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/public2.css" />
+		<style>
+			.mui-input-row{
+				position: fixed;
+				bottom: 0px;
+				left: 0;
+				padding: 5px 10px;
+				width: 100%;
+				min-height: 40px;
+				background: #CCCCCC;
+			}
+			textarea{
+				font-size: 15px;
+				background: white !important;
+				border-radius:10px !important;
+				width: 80% !important;
+				min-height: 30px;
+				height: 30px;
+				padding: 0;
+				line-height: 30px;
+				max-height: 150px !important;
+				text-indent: 10px;
+				word-wrap:break-word;
+			}
+			.mui-btn{
+				position: absolute;
+				right: 10px;
+				bottom:5px;
+				height: 30px;
+				width: 18% !important;
+				border-radius:10px;
+				background: rgba(250,75,155,0.6);
+				color: white;
+				padding: 0 !important;
+			}
+			.btn-active{
+	    		background: #FA4B9B;
+	    	}
+	    	.mui-content{
+	    		position: fixed;
+				bottom: 40px;
+				left: 0;
+				font-size: 14px;
+	    	}
+	    	.mui-scroll>li:last-of-type{
+	    		margin-bottom: 80px;
+	    	}
+	    	.chat-left,.chat-right{
+	    		position: relative;
+	    		list-style: none;
+	    		padding: 5px;
+	    	}
+	    	.chat-left img,.chat-right img{
+	    		height:40px;
+	    		width: 40px;
+	    		border-radius:40px ;
+	    	}
+	    	.chat-right img{
+	    		float: right;
+	    	}
+	    	.chat-left .username{
+	    		position: absolute;
+	    		top: 10px;
+	    		left: 50px;
+	    	}
+	    	.chat-right .username{
+	    		position: absolute;
+	    		top: 10px;
+	    		right: 50px;
+	    	}
+	    	.chat-left .chat-content{
+	    		margin-left: 40px;
+	    		margin-top: -20px;
+	    	}
+	    	.chat-right .chat-content{
+	    		margin-left: 19%;
+	    		margin-top: 30px;
+	    	}
+	    	.chat-content,.chat-content{
+	    		width: 70% !important;
+	    		position: relative;
+	    		background: #e2bfcf;
+	    		border-radius:20px;
+	    		padding: 10px;
+	    		word-wrap:break-word;
+	    		-webkit-user-select: text;
+	    	}
+	    	.chat-left .chat-content::after{
+	    		content: "";
+				height: 0px;
+				width: 0px;
+				position: absolute;
+				border: 15px solid transparent;
+				border-top:none;
+				left: -25px;
+				top: 10px;
+				border-right-color:#e2bfcf;
+	    	}
+	    	.chat-right .chat-content::after{
+	    		content: "";
+				height: 0px;
+				width: 0px;
+				position: absolute;
+				border: 15px solid transparent;
+				border-left-color:#e2bfcf;
+				border-top:none;
+				right: -25px;
+				top: 10px;
+	    	}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <span class="mui-icon mui-icon-gear mui-pull-right"></span>
+		    <h1 class="mui-title"></h1>
+		</header>
+		<div class="mui-scroll-wrapper mui-content">
+		    <div class="mui-scroll">
+		    </div>
+		</div>
+	    <div class="mui-input-row">
+	    	<button type="button" class="mui-btn">发送</button>
+	        <textarea id="textarea"></textarea>
+	    </div>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+		<script type="text/javascript">
+			mui.init();
+			var yourname;
+			var myimg='http://zhchina.top:8040/icon/1518081064886.png'
+			var myname="未命名的小戏精";
+			var userid='17607095343';
+			var APIkey="9fdcebc53c8043a096ee2eb8c7e91acf";
+			if (localStorage.getItem("login")) {
+				var login=JSON.parse(localStorage.getItem("login"));
+			}
+			if (login) {
+				userid=login.uid;
+				myimg=login.img;
+				myname=login.name;
+			}
+			if (localStorage.getItem("liaotian")) {
+				var yuanlai=JSON.parse(localStorage.getItem("liaotian"));
+				for (var i=0; i<yuanlai.length;i++) {
+					if(yuanlai[i].who=="you"){
+						$(".mui-scroll").append('<li class="chat-left"></li>');
+						$(".chat-left").eq($(".chat-left").length-1).append('<img src="http://zhchina.top:8040/icon/1518075297943.png" /><div class="username">小戏精</div>');
+						$(".chat-left").eq($(".chat-left").length-1).append('<div class="chat-content">'+yuanlai[i].what+'</div>');
+					}else{
+						console.log()
+						$(".mui-scroll").append('<li class="chat-right"></li>');
+						$(".chat-right").eq($(".chat-right").length-1).append('<img src="'+myimg+'" /><div class="username">'+myname+'</div>');
+						$(".chat-right").eq($(".chat-right").length-1).append('<div class="chat-content">'+yuanlai[i].what+'</div>');
+					}
+				}
+			}
+			mui('.mui-scroll-wrapper').scroll().scrollToBottom();
+			mui.plusReady(function () {
+			    var self = plus.webview.currentWebview();
+            	var userid = self.userid;
+            	yourname = self.name;
+            	$(".mui-title").html(yourname);
+			})
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration: 0.0005 
+			});
+			$('.mui-content').css("bottom",$('.mui-input-row').css("height"))
+			$("#textarea").on("input",function(){
+				$('.mui-content').css("bottom",$('.mui-input-row').css("height"))
+				if($("#textarea").val().length>0){
+					$('.mui-btn').addClass('btn-active')
+				}else{
+					$('.mui-btn').removeClass('btn-active')
+				}
+			})
+			$('.mui-btn')[0].addEventListener("tap",function(){
+				if($.trim($("#textarea").val()).length>0){
+					mui.post('http://www.tuling123.com/openapi/api',{
+							"key":APIkey,
+							"info":$("#textarea").val(),
+							"userid":userid
+						},function(data){
+							$(".mui-scroll").append('<li class="chat-left"></li>');
+							$(".chat-left").eq($(".chat-left").length-1).append('<img src="http://zhchina.top:8040/icon/1518075297943.png" /><div class="username">小戏精</div>');
+							$(".chat-left").eq($(".chat-left").length-1).append('<div class="chat-content">'+data.text+'</div>');
+							mui('.mui-scroll-wrapper').scroll().scrollToBottom();
+							if (localStorage.getItem("liaotian")) {
+								var yuanlai=JSON.parse(localStorage.getItem("liaotian"))
+								yuanlai.push({"who":"you","what":data.text})
+								localStorage.setItem("liaotian",JSON.stringify(yuanlai))
+							} else{
+								localStorage.setItem("liaotian",JSON.stringify([{"who":"you","what":data.text}]));
+							}
+						},'json'
+					);
+					$(".mui-scroll").append('<li class="chat-right"></li>');
+					$(".chat-right").eq($(".chat-right").length-1).append('<img src="'+myimg+'" /><div class="username">'+myname+'</div>');
+					$(".chat-right").eq($(".chat-right").length-1).append('<div class="chat-content">'+$("#textarea").val()+'</div>');
+					if (localStorage.getItem("liaotian")) {
+						var yuanlai=JSON.parse(localStorage.getItem("liaotian"))
+						yuanlai.push({"who":"i","what":$("#textarea").val()})
+						console.log(yuanlai)
+						localStorage.setItem("liaotian",JSON.stringify(yuanlai))
+					} else{
+						localStorage.setItem("liaotian",JSON.stringify([{"who":"i","what":$("#textarea").val()}]));
+					}
+					$("#textarea").val("");
+					$('.mui-content')[0].style.bottom="40px"
+					mui('.mui-scroll-wrapper').scroll().scrollToBottom();
+				}
+			})
+			document.getElementsByClassName("mui-icon-gear")[0].addEventListener("tap",function(){
+				mui.openWindow('qingchuliaotian.html','qingchuliaotian',{waiting:{autoShow:false}})
+			})
+			//textarea自适应高度
+			var autoTextarea = function (elem, extra, maxHeight) {
+		        extra = extra || 0;
+		        var isFirefox = !!document.getBoxObjectFor || 'mozInnerScreenX' in window,
+		        isOpera = !!window.opera && !!window.opera.toString().indexOf('Opera'),
+		                addEvent = function (type, callback) {
+		                        elem.addEventListener ?
+		                                elem.addEventListener(type, callback, false) :
+		                                elem.attachEvent('on' + type, callback);
+		                },
+		                getStyle = elem.currentStyle ? function (name) {
+		                        var val = elem.currentStyle[name];
+		 
+		                        if (name === 'height' && val.search(/px/i) !== 1) {
+		                                var rect = elem.getBoundingClientRect();
+		                                return rect.bottom - rect.top -
+		                                        parseFloat(getStyle('paddingTop')) -
+		                                        parseFloat(getStyle('paddingBottom')) + 'px';        
+		                        };
+		                        return val;
+		                } : function (name) {
+		                                return getComputedStyle(elem, null)[name];
+		                },
+		                minHeight = parseFloat(getStyle('height'));
+		        elem.style.resize = 'none';
+		        var change = function () {
+		                var scrollTop, height,
+		                        padding = 0,
+		                        style = elem.style;
+		 
+		                if (elem._length === elem.value.length) return;
+		                elem._length = elem.value.length;
+		 
+		                if (!isFirefox && !isOpera) {
+		                        padding = parseInt(getStyle('paddingTop')) + parseInt(getStyle('paddingBottom'));
+		                };
+		                scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+		 
+		                elem.style.height = minHeight + 'px';
+		                if (elem.scrollHeight > minHeight) {
+		                        if (maxHeight && elem.scrollHeight > maxHeight) {
+		                                height = maxHeight - padding;
+		                                style.overflowY = 'auto';
+		                        } else {
+		                                height = elem.scrollHeight - padding;
+		                                style.overflowY = 'hidden';
+		                        };
+		                        style.height = height + extra + 'px';
+		                        scrollTop += parseInt(style.height) - elem.currHeight;
+		                        document.body.scrollTop = scrollTop;
+		                        document.documentElement.scrollTop = scrollTop;
+		                        elem.currHeight = parseInt(style.height);
+		                };
+		        };
+		        addEvent('propertychange', change);
+		        addEvent('input', change);
+		        addEvent('focus', change);
+		        addEvent('blur', change);
+		        change();
+			};
+			var text =document.getElementById("textarea");
+			autoTextarea(text);
+		</script>
+	</body>
+
+</html>

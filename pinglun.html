@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/iconfont.css" />
+		<style>
+			.mui-title,.color,.mui-icon-left-nav{
+				color: #FA4B9B !important;
+			}
+			.mui-content{
+				margin-top: -25px;
+			}
+			.mui-card-content{
+				padding: 5px 10px;
+				text-indent: 20px;
+			}
+			.mui-btn{
+				border: none !important;
+			}
+			.zan .mui-badge{
+				vertical-align: middle;
+				margin-top: -8px;
+			}
+			.mui-badge{
+				background: #FA4B9B !important;
+			}
+		</style>
+	</head>
+	<script src="js/mui.min.js"></script><br />
+	<script type="text/javascript" src="js/angular.min.js" ></script>
+	<script type="text/javascript">
+		mui.init();
+		var ngapp=angular.module("myapp",[]);
+		ngapp.controller("controller",function($scope){
+	    	$scope.longComments=[];
+	    	$scope.shortComments=[];
+			$scope.zan1=function(){
+				if(!this.longComment.zan){
+					this.longComment.likes++
+				}else{
+					this.longComment.likes--
+				}
+	    		this.longComment.zan=!this.longComment.zan
+	    	}
+			$scope.zan2=function(){
+				if(!this.shortComment.zan){
+					this.shortComment.likes++
+				}else{
+					this.shortComment.likes--
+				}
+	    		this.shortComment.zan=!this.shortComment.zan
+	    	}
+	    	mui.plusReady(function () {
+		    	var self=plus.webview.currentWebview()
+		    	$scope.$apply(function(){
+					$scope.longComments=self.longComments;
+			    	$scope.shortComments=self.shortComments;
+			    	for (var i=0;i<$scope.longComments;i++) {
+			    		$scope.longComments[i].zan=false
+			    	}
+			    	for (var i=0;i<$scope.shortComments;i++) {
+			    		$scope.shortComments[i].zan=false
+			    	}
+				}) 
+			})
+	   })
+		
+	</script>
+	<body ng-app="myapp">
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">评论</h1>
+		</header>
+		<div class="mui-content" ng-controller="controller">
+			<div class="mui-card" ng-repeat="longComment in longComments">
+				<div class="mui-card-header  mui-card-media">
+					<img ng-src="{{longComment.avatar}}" />
+					<div class="mui-media-body">
+						{{longComment.author}}
+						<p>发表于 {{longComment.time}}</p>
+					</div>
+				</div>
+				<!--内容区-->
+				<div class="mui-card-content">{{longComment.content}}</div>
+				<div class="mui-card-footer">
+					<span class="mui-badge mui-badge-primary"><span class="zan">{{longComment.likes}}人已赞</span></span>
+					<i class="iconfont icon-zan" ng-click="zan1()" ng-class="{color:longComment.zan==true}"></i>
+				</div>
+			</div>
+			<div class="mui-card" ng-repeat="shortComment in shortComments">
+				<!--页眉，放置标题-->
+				<div class="mui-card-header  mui-card-media">
+					<img src="{{shortComment.avatar}}" />
+					<div class="mui-media-body">
+						{{shortComment.author}}
+						<p>发表于 {{shortComment.time}}</p>
+					</div>
+				</div>
+				<!--内容区-->
+				<div class="mui-card-content">{{shortComment.content}}</div>
+				<div class="mui-card-footer">
+					<span class="mui-badge mui-badge-primary"><span class="zan">{{shortComment.likes}}人已赞</span></span>
+					<i class="iconfont icon-zan" ng-click="zan2()" ng-class="{color:shortComment.zan==true}"></i>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+    <link rel="stylesheet" href="css/public2.css"/>
+    <style>
+    	.mui-table-view{
+    		margin: 0 !important;
+    	}
+    	.mui-media img{
+    		height: 40px;
+    		width: 40px;
+    		border-radius:20px ;
+    	}
+    	.mui-media{
+    		margin: 0;
+    	}
+    	.mui-navigate{
+    		height: 40px;
+    		padding: 0 !important;
+    		margin: 0;
+    	}
+    	.mui-table-view-cell:after,.mui-card-footer:before{
+    		background-color: transparent;
+    	}
+    	.mui-icon-arrowright{
+    		-webkit-transform: rotate(0deg);
+    		transition:0.3s;
+    	}
+    	.mui-icon-active{
+    		-webkit-transform: rotate(90deg);
+    	}
+    	.mui-content{
+    		margin-top: 10px;
+    	}
+    </style>
+</head>
+<body>
+   	<header class="mui-bar mui-bar-nav">
+   	    <h1 class="mui-title">服务</h1>
+   	</header>
+   	<div class="mui-content">
+   	    <ul class="mui-table-view">
+   	    	<li class="mui-table-view-cell mui-collapse">
+   	    		<a class="mui-navigate" href="#">
+   	    			<div class="mui-card-footer">
+		   	    		<span class="mui-icon mui-icon-arrowright"></span>
+		   	    		<span>我的好友</span>
+		   	    		<span>1/1</span>
+	   	    		</div>
+   	    		</a>
+   	    		<div class="mui-collapse-content">
+   	                <ul class="mui-table-view">
+   	                    <li class="mui-table-view-cell mui-media" id="8888" name="小戏精">
+   	                        <a href="javascript:;">
+   	                            <img class="mui-media-object mui-pull-left" src="http://zhchina.top:8040/icon/1518075297943.png">
+   	                            <div class="mui-media-body">
+   	                            	<span>小戏精</span>
+   	                                <p class="mui-ellipsis">Hi,我是小戏精,你的智能伙伴!</p>
+   	                            </div>
+   	                        </a>
+   	                    </li>
+   	                </ul>
+   	            </div>
+   	    	</li>
+   	        <li class="mui-table-view-cell mui-collapse">
+   	    		<a class="mui-navigate" href="#">
+   	    			<div class="mui-card-footer">
+		   	    		<span class="mui-icon mui-icon-arrowright"></span>
+		   	    		<span>公众号</span>
+		   	    		<span>0/0</span>
+	   	    		</div>
+   	    		</a>
+   	    		<div class="mui-collapse-content">
+   	                
+   	            </div>
+   	    	</li>
+   	        <li class="mui-table-view-cell mui-collapse">
+   	    		<a class="mui-navigate" href="#">
+   	    			<div class="mui-card-footer">
+		   	    		<span class="mui-icon mui-icon-arrowright"></span>
+		   	    		<span>黑名单</span>
+		   	    		<span>0/0</span>
+	   	    		</div>
+   	    		</a>
+   	    		<div class="mui-collapse-content">
+   	                
+   	            </div>
+   	    	</li>
+   	    </ul>
+   	</div>
+    <script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+    <script type="text/javascript">
+    mui.init();
+    mui.init({
+        keyEventBind: {
+	        backbutton: false, 
+	        menubutton: true
+	    }
+    });
+    mui(".mui-content").on("tap",".mui-collapse",function(){
+    	$(this).siblings().find(".mui-icon-arrowright").removeClass("mui-icon-active");
+    	$(this).find(".mui-icon-arrowright").toggleClass("mui-icon-active");
+    })
+     mui(".mui-collapse-content").on("tap",".mui-media",function(e){
+    	e.stopPropagation()
+    	var userid=this.getAttribute("id")
+     	var name=this.getAttribute("name")
+     	mui.openWindow('chat.html','chat',{extras:{userid:userid,name:name},waiting:{autoShow:false}})
+    })
+    </script>
+</body>
+</html>
+

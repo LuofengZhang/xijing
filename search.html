@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/public2.css" />
+		<style>
+			.mui-table-view::after,.mui-table-view::before{
+				background: transparent !important;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <div class="mui-input-row mui-search mui-active">
+		        <input type="search" autofocus="autofocus" id="search" class="mui-input-clear mui-active" placeholder="月亮">
+		    </div>
+		</header>
+		<div class="mui-content">
+		    <ul class="mui-table-view" id="searchhtml">
+		    	<!--<div class="mui-card">
+		    		<div class="mui-card-header"></div>
+		    		<div class="mui-card-content"></div>
+		    	</div>-->
+		        <!--<li class="mui-table-view-cell mui-media">
+	                <img class="mui-media-object mui-pull-left" src="http://placehold.it/40x30">
+	                <div class="mui-media-body">
+	                    <p class="mui-ellipsis">能和心爱的人一起睡觉，是件幸福的事情；可是，打呼噜怎么办？</p>
+	                </div>
+		        </li>-->
+		    </ul>
+		</div>
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script type="text/javascript">
+		mui.init()
+	</script>
+	<script>
+		function plusReady(){
+		    var Context = plus.android.importClass("android.content.Context");
+		    var InputMethodManager = plus.android.importClass("android.view.inputmethod.InputMethodManager");
+		    var main = plus.android.runtimeMainActivity();
+		    var imm = main.getSystemService(Context.INPUT_METHOD_SERVICE);
+		    imm.toggleSoftInput(0,InputMethodManager.SHOW_FORCED);
+		}
+		document.addEventListener("plusready",plusReady,false);
+		document.getElementById("search").focus();
+		var search=document.getElementById("search");
+		var news=JSON.parse(localStorage.getItem("news"));
+		if(news){
+    		document.getElementById("search").placeholder=news[0].title.substring(0,2)
+    	}
+		search.oninput=function(){
+			if(search.value.length>0){
+				mui.ajax('http://zhchina.top:8040/search?key='+search.value,{
+					dataType:'json',//服务器返回json格式数据
+					type:'get',//HTTP请求类型
+					timeout:10000,//超时时间设置为10秒；
+					success:function(data){
+						if(data.code==200){
+							var arr=[]
+							for (var i=0;i<data.log.length;i++) {
+								arr.push('<li class="mui-table-view-cell mui-media" id="'+data.log[i].id+'">');
+								arr.push('<img class="mui-media-object mui-pull-left" src="'+data.log[i].images+'">');
+								arr.push('<div class="mui-media-body"><p class="mui-ellipsis">'+data.log[i].title);
+								arr.push('</p></div></li>')
+							}
+							var arr=arr.join("");
+							document.getElementById("searchhtml").innerHTML=arr
+							if(data.log.length==0&&news){
+								var arr=[];
+								arr.push('<div class="mui-card"><div class="mui-card-header">猜你喜欢</div>')
+								for (var i=0;i<news.length;i++) {
+									arr.push('<div class="mui-card-content">')
+									arr.push('<li class="mui-table-view-cell mui-media" id="'+news[i].id+'">');
+									arr.push('<img class="mui-media-object mui-pull-left" src="'+news[i].images+'">');
+									arr.push('<div class="mui-media-body"><p class="mui-ellipsis">'+news[i].title);
+									arr.push('</p></div></li>')
+								}
+								arr.push('</div></div>')
+								var arr=arr.join("");
+								document.getElementById("searchhtml").innerHTML=arr;
+							}
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						mui.toast('网络错误')
+					}
+				});
+			}
+		}
+		mui("#searchhtml").on("tap",".mui-media",function(){
+	  	//获取id
+	  	var news = this.getAttribute("id");
+	  	//打开新闻详情
+	  	mui.openWindow({
+	    id:'about',
+	    url:'about.html',
+	    waiting:{autoShow:false},
+	    show:{
+	    	aniShow:"zoom-fade-out",
+	    	duration:200
+	    },
+	    extras:{
+	    	news:news//传nwes id值给详情页面，通知加载新数据
+	    },
+	  	})
+	});
+	</script>
+</html>
